@@ -1,17 +1,28 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { setFavorites } from '../../actions/pokemon';
 
 const FavoritesPage = () => {
-  const { favorites } = useSelector(state => state.pokemon);
-  console.log('Favs', favorites);
+  const dispatch = useDispatch();
+  const favorites = JSON.parse(localStorage.getItem('pokemonFavorites') || []);
+
+  useEffect(() => {
+    dispatch(setFavorites(favorites));
+  }, [favorites]);
 
   return (
     <div>
       <h1>Pokemon App - Favorites</h1>
       <div className="row mt-5">
         <div className="col">
-          {/*false && (
-            <div className="card" style={{ width: '50%' }}>
+          <Link to="/">Home</Link>
+        </div>
+      </div>
+      <div className="row mt-5">
+        <div className="col">
+          {favorites.map(pokemon => (
+            <div className="card mb-4" key={pokemon.id}>
               <div className="card-body">
                 <h5 className="card-title text-center">{pokemon.name}</h5>
                 <img src={pokemon.sprites?.front_default} />
@@ -35,16 +46,12 @@ const FavoritesPage = () => {
                   <br />
                   <small>{pokemon.sprites?.front_default}</small>
                 </p>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={handleAddFavorite}
-                >
+                <button type="button" className="btn btn-primary">
                   Add to favorites
                 </button>
               </div>
             </div>
-                  )*/}
+          ))}
         </div>
       </div>
     </div>

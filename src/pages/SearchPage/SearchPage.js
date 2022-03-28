@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { addFavorite } from '../../actions/pokemon';
 
@@ -11,6 +12,7 @@ const SearchPage = () => {
   const [searchName, setSearchName] = useState('');
   const [error, setError] = useState('');
   const [pokemon, setPokemon] = useState(null);
+  const [firstLoad, setFirstLoad] = useState(true);
 
   const handleInputChange = e => {
     setSearchName(e.target.value);
@@ -44,8 +46,14 @@ const SearchPage = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem('pokemonFavorites', JSON.stringify(favorites));
+    if (!firstLoad) {
+      localStorage.setItem('pokemonFavorites', JSON.stringify(favorites));
+    }
   }, [favorites]);
+
+  useEffect(() => {
+    setFirstLoad(false);
+  }, []);
 
   return (
     <div>
@@ -56,6 +64,7 @@ const SearchPage = () => {
             <a className="navbar-brand" href="#">
               Pokemon App
             </a>
+            <Link to="/favorites">Favorites</Link>
             <div>
               <form
                 className="custom-form form-inline my-2 my-lg-0"

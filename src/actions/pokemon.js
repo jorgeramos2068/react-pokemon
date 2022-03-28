@@ -9,3 +9,8 @@ export const removeFavorite = id => ({
   type: types.removeFavorite,
   payload: id,
 });
+
+export const setFavorites = favorites => ({
+  type: types.setFavorites,
+  payload: favorites,
+});

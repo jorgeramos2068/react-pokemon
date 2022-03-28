@@ -17,6 +17,11 @@ const pokemonReducer = (state = initialState, action) => {
         ...state,
         favorites: [...state.favorites, action.payload],
       };
+    case types.setFavorites:
+      return {
+        ...state,
+        favorites: action.payload,
+      };
     default:
       return state;
   }
