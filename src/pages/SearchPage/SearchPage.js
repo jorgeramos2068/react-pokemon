@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { addFavorite } from '../../actions/pokemon';
 
 const SearchPage = () => {
   const endpoint = 'https://pokeapi.co/api/v2/pokemon';
+  const dispatch = useDispatch();
+  const { favorites } = useSelector(state => state.pokemon);
   const [searchName, setSearchName] = useState('');
   const [error, setError] = useState('');
   const [pokemon, setPokemon] = useState(null);
@@ -15,8 +20,8 @@ const SearchPage = () => {
     try {
       if (searchName) {
         const { data } = await axios.get(`${endpoint}/${searchName}`);
-        const { name, order, weight, stats, sprites } = data;
-        setPokemon({ name, order, weight, stats, sprites });
+        const { id, name, order, weight, stats, sprites } = data;
+        setPokemon({ id, name, order, weight, stats, sprites });
         setError('');
       } else {
         setError('The search text cannot be empty');
@@ -33,6 +38,14 @@ const SearchPage = () => {
     e.preventDefault();
     searchPokemon();
   };
+
+  const handleAddFavorite = () => {
+    dispatch(addFavorite(pokemon));
+  };
+
+  useEffect(() => {
+    localStorage.setItem('pokemonFavorites', JSON.stringify(favorites));
+  }, [favorites]);
 
   return (
     <div>
@@ -100,7 +113,11 @@ const SearchPage = () => {
                   <br />
                   <small>{pokemon.sprites?.front_default}</small>
                 </p>
-                <button type="button" className="btn btn-primary">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleAddFavorite}
+                >
                   Add to favorites
                 </button>
               </div>
